@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simulado AWS Practitioner</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app__header">
+        <h1>Simulado de Test</h1>
+        <div class="badge" id="totalPoolBadge">Banco: —</div>
+      </header>
+
+      <section class="config" id="config">
+        <div class="config__row">
+          <label for="numPreguntas">Cantidad de preguntas:</label>
+          <input id="numPreguntas" type="number" min="1" step="1" />
+        </div>
+        <div class="config__row">
+          <label for="tiempoMin">Tiempo (minutos):</label>
+          <input id="tiempoMin" type="number" min="1" step="1" value="15" />
+        </div>
+        <div class="config__row">
+          <label>
+            <input id="mezclarPreguntas" type="checkbox" checked />
+            Mezclar preguntas
+          </label>
+          <label>
+            <input id="mezclarOpciones" type="checkbox" checked />
+            Mezclar opciones (dentro de cada pregunta)
+          </label>
+        </div>
+        <div class="config__actions">
+          <button id="btnComenzar" class="btn btn--primary">Comenzar</button>
+          <button id="btnCargar" class="btn" title="Recargar banco de preguntas">Recargar</button>
+        </div>
+        <p class="config__hint">
+          Nota: El banco se carga desde <code>questions.json</code>.
+        </p>
+      </section>
+
+      <section class="exam hidden" id="exam">
+        <div class="exam__topbar">
+          <div id="paginacion" class="paginacion">Pregunta —/—</div>
+          <div id="cronometro" class="cronometro">00:00</div>
+        </div>
+
+        <div class="question" id="question"></div>
+
+        <div class="exam__actions">
+          <button id="btnPrev" class="btn" disabled>Anterior</button>
+          <button id="btnNext" class="btn">Siguiente</button>
+          <span class="spacer"></span>
+          <button id="btnFinalizar" class="btn btn--accent">Finalizar y Calificar</button>
+          <button id="btnReset" class="btn btn--danger">Reiniciar</button>
+        </div>
+
+        <div class="navigator" id="navigator"></div>
+      </section>
+
+      <section class="results hidden" id="results">
+        <h2>Resultados</h2>
+        <div class="summary" id="summary"></div>
+        <div class="results__actions">
+          <button id="btnRevisar" class="btn">Revisar preguntas</button>
+          <button id="btnNuevo" class="btn btn--primary">Nuevo Test</button>
+        </div>
+        <div id="review"></div>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+  </html>
