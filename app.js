@@ -4,6 +4,8 @@
 
   const UI = {
     totalPoolBadge: el('#totalPoolBadge'),
+    themeSelect: el('#themeSelect'),
+    themeStylesheet: el('#themeStylesheet'),
     config: el('#config'),
     numPreguntas: el('#numPreguntas'),
     tiempoMin: el('#tiempoMin'),
@@ -28,6 +30,54 @@
     btnRevisar: el('#btnRevisar'),
     btnNuevo: el('#btnNuevo'),
   };
+
+  // Temas (Bootswatch 5)
+  const THEMES = [
+    { name: 'Darkly (oscuro)', slug: 'darkly' },
+    { name: 'Cyborg (oscuro)', slug: 'cyborg' },
+    { name: 'Slate (oscuro)', slug: 'slate' },
+    { name: 'Superhero (oscuro)', slug: 'superhero' },
+    { name: 'Quartz (oscuro)', slug: 'quartz' },
+    { name: 'Vapor (oscuro)', slug: 'vapor' },
+    { name: 'Cerulean', slug: 'cerulean' },
+    { name: 'Cosmo', slug: 'cosmo' },
+    { name: 'Flatly', slug: 'flatly' },
+    { name: 'Journal', slug: 'journal' },
+    { name: 'Litera', slug: 'litera' },
+    { name: 'Lumen', slug: 'lumen' },
+    { name: 'Lux', slug: 'lux' },
+    { name: 'Materia', slug: 'materia' },
+    { name: 'Minty', slug: 'minty' },
+    { name: 'Morph', slug: 'morph' },
+    { name: 'Pulse', slug: 'pulse' },
+    { name: 'Sandstone', slug: 'sandstone' },
+    { name: 'Simplex', slug: 'simplex' },
+    { name: 'Sketchy', slug: 'sketchy' },
+    { name: 'Solar', slug: 'solar' },
+    { name: 'Spacelab', slug: 'spacelab' },
+    { name: 'United', slug: 'united' },
+    { name: 'Yeti', slug: 'yeti' },
+    { name: 'Zephyr', slug: 'zephyr' },
+  ];
+
+  const BOOTSWATCH_BASE = 'https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist';
+  function applyTheme(slug) {
+    if (!UI.themeStylesheet) return;
+    UI.themeStylesheet.href = `${BOOTSWATCH_BASE}/${slug}/bootstrap.min.css`;
+    try { localStorage.setItem('theme', slug); } catch {}
+  }
+
+  function initThemeSelector() {
+    if (!UI.themeSelect) return;
+    // populate
+    UI.themeSelect.innerHTML = THEMES.map(t => `<option value="${t.slug}">${t.name}</option>`).join('');
+    let current = 'darkly';
+    try { current = localStorage.getItem('theme') || current; } catch {}
+    if (!THEMES.some(t => t.slug === current)) current = 'darkly';
+    UI.themeSelect.value = current;
+    applyTheme(current);
+    UI.themeSelect.addEventListener('change', (e) => applyTheme(e.target.value));
+  }
 
   const state = {
     pool: [], // banco completo
@@ -181,7 +231,7 @@
     UI.navigator.innerHTML = '';
     for (let i = 0; i < n; i++) {
       const b = document.createElement('button');
-      b.className = 'navbtn';
+      b.className = 'btn btn-outline-secondary btn-sm navbtn';
       b.textContent = String(i + 1);
       if (i === state.current) b.classList.add('navbtn--active');
       if (state.answers.has(i) && state.answers.get(i)?.size) b.classList.add('navbtn--answered');
@@ -227,7 +277,7 @@
       const tools = document.createElement('div');
       tools.className = 'question__tools';
       const btnReveal = document.createElement('button');
-      btnReveal.className = 'btn';
+      btnReveal.className = 'btn btn-outline-info btn-sm';
       btnReveal.textContent = isRevealed ? 'Ocultar explicación' : 'Revelar respuesta';
       btnReveal.addEventListener('click', () => {
         if (state.revealed.has(i)) {
@@ -424,6 +474,7 @@
   });
 
   // Inicialización
+  initThemeSelector();
   loadPool().catch((e) => {
     console.error(e);
     UI.totalPoolBadge.textContent = 'Banco: error';
